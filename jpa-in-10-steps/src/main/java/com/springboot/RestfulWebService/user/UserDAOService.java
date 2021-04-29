@@ -1,12 +1,10 @@
- package com.springboot.jpa.jpain10steps.service;
+package com.springboot.RestfulWebService.user;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
-
-import com.springboot.jpa.jpain10steps.entity.User;
 
 @Repository
 @Transactional
