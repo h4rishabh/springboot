@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,30 +34,37 @@ public class UserResource {
 	
 	@GetMapping("user/{id}")
 	public User getUserById(@PathVariable int id) {
-		List<User> userList = service.findAllUser();
-		
-		for(User usr : userList) {
-			if(usr.getId() == id)
-				return usr;
-		}
-		return null;
+		User user = service.findOne(id);
+		if(user == null)
+			throw new UserNotFoundException("id: "+id);
+		return user;
 	}
 	
 	
 	// input - user details
 	// output - CREATED and return the created URI
 	
-	@PostMapping("/add-user")
+	@PostMapping("/user")
 	public ResponseEntity<Object> createUsers(@RequestBody User user) {
 		User savedUser = service.save(user);
 
 		// status - CREATED
-		// /users/{id} service.getId
+		// users/{id} service.getId - endpoint of new added user
 
 		URI location = ServletUriComponentsBuilder
 				.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(savedUser.getId()).toUri();
 
 		return ResponseEntity.created(location).build();
+	}
+	
+	@DeleteMapping("/user/{id}")
+	public void deleteUserById(@PathVariable int id) {
+		User user = service.deleteById(id);
+		// status - 200 - OK, if user is found & deleted
+		// status - 404 - NOT FOUND, if user not found
+		if(user == null) {
+			throw new UserNotFoundException("id: "+id);
+		}
 	}
 }
