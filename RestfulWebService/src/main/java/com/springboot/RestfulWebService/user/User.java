@@ -2,10 +2,20 @@ package com.springboot.RestfulWebService.user;
 
 import java.util.Date;
 
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Size;
+
 public class User {
 	
 	private Integer id;
+	
+	// with min 2 character
+	@Size(min = 2, message = "Name should have alteast 2 characters")
 	private String name;
+	
+	
+	// @Past annotation is used to make sure this date should be always past date 
+	@Past
 	private Date birthDate;
 	
 	public Integer getId() {
